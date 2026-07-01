@@ -860,6 +860,23 @@ p {
   border-color: #e7ca8a;
 }
 
+.launch-intro {
+  background: linear-gradient(135deg, #ffffff 0%, #edf7f1 100%);
+  border-color: #bfd8c7;
+}
+
+.copy-note {
+  margin: 10px 0 12px !important;
+  padding: 8px 10px;
+  border-left: 3px solid var(--blue);
+  border-radius: 6px;
+  color: #3f4851 !important;
+  background: var(--blue-soft);
+  font-size: 12px !important;
+  line-height: 17px !important;
+  font-weight: 700;
+}
+
 .bottom-nav {
   position: absolute;
   left: 0;

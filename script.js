@@ -71,7 +71,7 @@ publishPost.addEventListener("click", () => {
         <h3>Вы · Искатель</h3>
         <p>${activeKind} · только что</p>
       </div>
-      <img src="../Иконки/Искатель.png" alt="Бейдж Искатель" />
+      <img src="./assets/icons/seeker.png" alt="Бейдж Искатель" />
     </header>
     <p class="post-text"></p>
     <div class="post-metrics">
@@ -107,7 +107,7 @@ document.addEventListener("click", (event) => {
   const copyButton = event.target.closest("[data-copy-template]");
   if (copyButton) {
     const key = copyButton.dataset.copyTemplate;
-    copyText(copiedTexts[key] || "");
+    copyText(copiedTexts[key] || "", copyButton.dataset.copyMessage || "Текст скопирован");
   }
 });
 
@@ -178,12 +178,12 @@ function openScreen(id) {
   screens.forEach((screen) => screen.classList.toggle("is-active", screen.id === id));
 }
 
-async function copyText(text) {
+async function copyText(text, successMessage) {
   if (!text) return;
 
   try {
     await navigator.clipboard.writeText(text);
-    showToast("Текст скопирован");
+    showToast(successMessage);
   } catch {
     showToast("Текст готов для копирования");
   }
