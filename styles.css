@@ -865,7 +865,7 @@ p {
   border-color: #bfd8c7;
 }
 
-.copy-note {
+.use-note {
   margin: 10px 0 12px !important;
   padding: 8px 10px;
   border-left: 3px solid var(--blue);

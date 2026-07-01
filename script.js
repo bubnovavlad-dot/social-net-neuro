@@ -9,15 +9,6 @@ const toast = document.querySelector("#toast");
 const neuroCount = document.querySelector("#neuroCount");
 const dailyProgress = document.querySelector("#dailyProgress");
 
-const copiedTexts = {
-  email:
-    "НейроКафе открывает сообщество практики. Делитесь инсайтами, рисунками и комментариями, поддерживайте других и получайте нейро за осмысленные действия.",
-  banner:
-    "Публикуйте инсайты. Собирайте достижения. Первый комментарий или репост засчитает день в серии.",
-  push:
-    "Сегодня в ленте новый афоризм. Прочитайте, оставьте отклик и сохраните серию.",
-};
-
 let activeKind = "Афоризм";
 let missionsDone = new Set(["read"]);
 let toastTimer = null;
@@ -103,12 +94,6 @@ document.addEventListener("click", (event) => {
   if (toastButton) {
     showToast(toastButton.dataset.toast);
   }
-
-  const copyButton = event.target.closest("[data-copy-template]");
-  if (copyButton) {
-    const key = copyButton.dataset.copyTemplate;
-    copyText(copiedTexts[key] || "", copyButton.dataset.copyMessage || "Текст скопирован");
-  }
 });
 
 document.querySelectorAll(".bottom-item").forEach((item) => {
@@ -176,17 +161,6 @@ function addNeuro(amount) {
 function openScreen(id) {
   tabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.screen === id));
   screens.forEach((screen) => screen.classList.toggle("is-active", screen.id === id));
-}
-
-async function copyText(text, successMessage) {
-  if (!text) return;
-
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast(successMessage);
-  } catch {
-    showToast("Текст готов для копирования");
-  }
 }
 
 function showToast(message) {
