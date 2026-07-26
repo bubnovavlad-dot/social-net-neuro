@@ -84,7 +84,7 @@ CTA: `Создать первый пост`
 
 ## Приоритеты разработки
 
-1. Событийная модель: `read_content`, `comment_created`, `post_created`, `repost_created`, `friend_invited`, `challenge_joined`.
+1. Событийная модель: `community_opened`, `daily_goal_viewed`, `first_response_started`, `first_response_sent`, `comment_created`, `post_created`, `support_clicked`, `repost_created`, `reward_feedback_seen`, `challenge_joined`, `challenge_progress_updated`, `friend_invited`, `friend_support_sent`, `return_from_push`.
 2. Правила зачета достижений: каждый тип контента должен иметь понятное условие и период.
 3. Лента: публикации, комментарии, поддержка, репост в свою ленту.
 4. Мгновенная обратная связь: нейро, серия, бейдж, прогресс.
