@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>НейроКафе · Сообщество</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="workspace">
+      <section class="phone" aria-label="Прототип социальной сети НейроКафе">
+        <header class="status-bar" aria-hidden="true">
+          <span>9:41</span>
+          <span class="camera-dot"></span>
+          <span class="system-icons">
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </header>
+
+        <div class="top-bar">
+          <button class="icon-button" type="button" aria-label="Открыть меню">
+            <span class="icon-menu"></span>
+          </button>
+          <h1>Сообщество</h1>
+          <div class="neuro-balance" aria-label="Баланс 720 нейро">
+            <strong id="neuroCount">720</strong>
+            <span>нейро</span>
+          </div>
+          <button class="icon-button" type="button" aria-label="Поиск">
+            <span class="icon-search"></span>
+          </button>
+        </div>
+
+        <nav class="tab-bar" aria-label="Разделы сообщества">
+          <button class="tab is-active" type="button" data-screen="feed">Лента</button>
+          <button class="tab" type="button" data-screen="quests">Челленджи</button>
+          <button class="tab" type="button" data-screen="friends">Друзья</button>
+        </nav>
+
+        <div class="content" id="phoneContent">
+          <section class="screen is-active" id="feed" aria-label="Лента сообщества">
+            <article class="launch-ribbon">
+              <div>
+                <p class="eyebrow">Новый раздел</p>
+                <h2>НейроКафе стало местом для практики</h2>
+                <p>Делитесь инсайтами, рисунками и историями. Комментарий или репост засчитывает действие в серию.</p>
+              </div>
+              <button class="primary-action" type="button" data-focus-composer>Оставить первый отклик</button>
+            </article>
+
+            <section class="daily-panel" aria-label="Прогресс дня">
+              <div class="daily-head">
+                <div>
+                  <p class="eyebrow">Сегодня</p>
+                  <h2>1 день в серии</h2>
+                </div>
+                <div class="streak-steps" aria-label="Этапы серии">
+                  <span class="is-done">3</span>
+                  <span>7</span>
+                  <span>30</span>
+                </div>
+              </div>
+              <div class="mission-checklist">
+                <button class="mission-item is-done" type="button" data-mission="read">
+                  <span class="mission-icon eye"></span>
+                  Прочитать материал
+                </button>
+                <button class="mission-item" type="button" data-mission="comment">
+                  <span class="mission-icon comment"></span>
+                  Оставить комментарий
+                </button>
+                <button class="mission-item" type="button" data-mission="share">
+                  <span class="mission-icon share"></span>
+                  Репост в ленту
+                </button>
+              </div>
+              <div class="progress-track" aria-label="Прогресс дня 33%">
+                <span id="dailyProgress" style="width: 33%"></span>
+              </div>
+              <p class="goal-feedback" id="goalFeedback">Следующий шаг: оставьте отклик или поддержите участника.</p>
+            </section>
+
+            <section class="composer" id="composer" aria-label="Создание публикации">
+              <div class="composer-row">
+                <div class="avatar avatar-user">А</div>
+                <label>
+                  <span>Что вы осмыслили сегодня?</span>
+                  <textarea id="composerText" rows="3">После афоризма захотелось попробовать маленькую нейролинию. Хочу заметить, что изменится в состоянии и какой вопрос появится после практики.</textarea>
+                </label>
+              </div>
+              <div class="composer-tools">
+                <button type="button" class="tool-chip is-active" data-kind="Афоризм">Афоризм</button>
+                <button type="button" class="tool-chip" data-kind="Статья">Статья</button>
+                <button type="button" class="tool-chip" data-kind="Рисунок">Рисунок</button>
+                <button type="button" class="primary-action" id="publishPost">Опубликовать</button>
+              </div>
+              <p class="form-feedback" id="composerFeedback" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="feed-list" id="feedList" aria-label="Публикации">
+              <article class="post-card">
+                <header class="post-head">
+                  <div class="avatar">О</div>
+                  <div>
+                    <h3>Ольга · Философ</h3>
+                    <p>Афоризм дня · 12 минут назад</p>
+                  </div>
+                  <img src="./assets/icons/philosopher.png" alt="Бейдж Философ" />
+                </header>
+                <p class="post-text">“Опыт начинается там, где мы перестаем спорить с линией”. Я прочитала афоризм и оставила короткий рисунок как ответ.</p>
+                <div class="artifact-preview">
+                  <span class="artifact-line"></span>
+                  <span class="artifact-line short"></span>
+                  <span class="artifact-line curve"></span>
+                </div>
+                <div class="post-metrics">
+                  <span>14 поддержали</span>
+                  <span>7 комментариев</span>
+                  <span>+20 нейро автору</span>
+                </div>
+                <div class="post-actions">
+                  <button type="button" data-like>Поддержать</button>
+                  <button type="button" data-comment>Комментировать</button>
+                  <button type="button" data-repost>В свою ленту</button>
+                </div>
+                <div class="comment-box" hidden>
+                  <input type="text" value="Спасибо, беру этот вопрос в практику сегодня: хочу заметить, где в рисунке появляется спокойствие и связь с выбором." aria-label="Комментарий" />
+                  <button class="primary-action" type="button" data-send-comment>Отправить</button>
+                </div>
+              </article>
+
+              <article class="post-card accent-post">
+                <header class="post-head">
+                  <div class="avatar avatar-green">М</div>
+                  <div>
+                    <h3>Марина · Искатель</h3>
+                    <p>Статья месяца · вчера</p>
+                  </div>
+                  <img src="./assets/icons/seeker.png" alt="Бейдж Искатель" />
+                </header>
+                <p class="post-text">Закрываю персональный вызов: 4 из 10 статей. Самым полезным оказался комментарий к чужому опыту, потому что он помог сформулировать свой.</p>
+                <div class="mini-progress">
+                  <span>4/10 статей</span>
+                  <div class="progress-track"><span style="width: 40%"></span></div>
+                  <strong>+300 нейро</strong>
+                </div>
+                <div class="post-actions">
+                  <button type="button" data-like>Поддержать</button>
+                  <button type="button" data-comment>Комментировать</button>
+                  <button type="button" data-repost>В свою ленту</button>
+                </div>
+              </article>
+            </section>
+          </section>
+
+          <section class="screen" id="quests" aria-label="Челленджи">
+            <article class="hero-card">
+              <p class="eyebrow">Персональный вызов</p>
+              <h2>5 откликов с поддержкой друзей</h2>
+              <p>Вы оставили 2 отклика за неделю. Поэтому цель предлагает следующий мягкий шаг: закрепить регулярность и поддержать участников.</p>
+              <div class="progress-row">
+                <span>2/5</span>
+                <strong>+120 нейро и бейдж</strong>
+              </div>
+              <div class="progress-track"><span style="width: 40%"></span></div>
+              <button class="primary-action" type="button" data-toast="Челлендж добавлен в план недели">Добавить в план</button>
+            </article>
+
+            <div class="quest-grid">
+              <article class="quest-item">
+                <h3>Философ</h3>
+                <p>Все афоризмы за 7 дней с комментариями.</p>
+                <div class="progress-row">
+                  <span>7/7</span>
+                  <strong>+100</strong>
+                </div>
+                <img src="./assets/icons/philosopher.png" alt="Философ" />
+              </article>
+              <article class="quest-item">
+                <h3>Эрудит</h3>
+                <p>30 статей с комментариями или репостами.</p>
+                <div class="progress-row">
+                  <span>0/30</span>
+                  <strong>+300</strong>
+                </div>
+                <img src="./assets/icons/erudite.png" alt="Эрудит" />
+              </article>
+              <article class="quest-item">
+                <h3>Марафонец</h3>
+                <p>10 заданий недели вместе с сообществом.</p>
+                <div class="progress-row">
+                  <span>3/10</span>
+                  <strong>+200</strong>
+                </div>
+                <img src="./assets/icons/marathoner.png" alt="Марафонец" />
+              </article>
+            </div>
+          </section>
+
+          <section class="screen" id="friends" aria-label="Друзья">
+            <article class="support-card support-card-main">
+              <p class="eyebrow">Поддержка друга</p>
+              <h2>Ольге нужна 1 поддержка до закрытия дня</h2>
+              <p>Поддержка засчитывает общий прогресс команды практики и помогает другу не потерять серию.</p>
+              <div class="mini-progress">
+                <span>Команда практики</span>
+                <div class="progress-track"><span style="width: 56%"></span></div>
+                <strong>5/9</strong>
+              </div>
+              <div class="support-actions">
+                <button type="button" data-toast="Поддержка Ольге отправлена">Поддержать</button>
+                <button type="button" data-toast="Челлендж отправлен другу">Позвать в челлендж</button>
+                <button type="button" data-toast="Материал дня отправлен">Поделиться материалом</button>
+              </div>
+            </article>
+
+            <section class="leaderboard" aria-label="Лидеры периода">
+              <h2>Рейтинг недели</h2>
+              <div class="leader-row">
+                <span>1</span>
+                <div class="avatar">О</div>
+                <p>Ольга</p>
+                <strong>1000</strong>
+              </div>
+              <div class="leader-row is-user">
+                <span>2</span>
+                <div class="avatar avatar-user">А</div>
+                <p>Вы</p>
+                <strong>720</strong>
+              </div>
+              <div class="leader-row">
+                <span>3</span>
+                <div class="avatar avatar-green">М</div>
+                <p>Марина</p>
+                <strong>500</strong>
+              </div>
+            </section>
+
+            <article class="empty-card">
+              <p class="eyebrow">Если друзей пока нет</p>
+              <h2>Начните с участника недели</h2>
+              <p>Покажите живого человека и мягкий CTA “Поддержать новичка”, а приглашение друга оставьте вторым шагом.</p>
+              <button class="primary-action" type="button" data-toast="Поддержка участнику недели отправлена">Поддержать новичка</button>
+            </article>
+
+            <article class="invite-card">
+              <p class="eyebrow">Приглашение</p>
+              <h2>Позвать друга в команду практики</h2>
+              <p>Приглашение остается вторичным действием после поддержки: оно расширяет команду, но не заменяет живое участие.</p>
+              <button class="primary-action ghost-action" type="button" data-toast="Приглашение подготовлено">Позвать в челлендж</button>
+            </article>
+          </section>
+        </div>
+
+        <nav class="bottom-nav" aria-label="Главная навигация приложения">
+          <button class="bottom-item" type="button">
+            <span class="nav-icon home"></span>
+            Главная
+          </button>
+          <button class="bottom-item is-active" type="button">
+            <span class="nav-icon community"><i>3</i></span>
+            Сообщество
+          </button>
+          <button class="bottom-item" type="button">
+            <span class="nav-icon study"></span>
+            Учеба
+          </button>
+        </nav>
+      </section>
+
+      <aside class="ux-board" aria-label="UX-аудит и рекомендации">
+        <section>
+          <p class="eyebrow">UX-аудит</p>
+          <h2>Главное решение: лента как двигатель прогресса</h2>
+          <p>Соцсеть стоит запускать не как отдельный форум, а как место, где комментарии, репосты, истории и рисунки подтверждают осмысленное взаимодействие с материалами.</p>
+        </section>
+        <section class="insight-grid">
+          <article>
+            <h3>Сильная база</h3>
+            <p>Есть “нейро”, бейджи, серия, ранги, друзья, лидерборд и персональные вызовы. Их нужно связать с публикациями.</p>
+          </article>
+          <article>
+            <h3>Риск</h3>
+            <p>Если лента будет просто набором постов, она проиграет крупным соцсетям. Уникальность должна быть в практике и прогрессе.</p>
+          </article>
+          <article>
+            <h3>Запуск</h3>
+            <p>Первый сценарий должен дать быстрый успех: прочитать материал, оставить отклик, получить засчитанный день и стартовый бейдж.</p>
+          </article>
+          <article>
+            <h3>Метрики</h3>
+            <p>Отслеживать долю пользователей с первым постом, комментариями, репостами, сохраненной серией и завершенными челленджами.</p>
+          </article>
+        </section>
+        <section class="priority-list">
+          <h2>Приоритеты доработки</h2>
+          <ol>
+            <li>Вынести “осмысленное действие” в верх ленты.</li>
+            <li>Показывать, что именно засчитывается в достижение.</li>
+            <li>Объединить комментарий, рисунок и репост в один понятный путь публикации.</li>
+            <li>Добавить мягкие социальные действия: поддержать, помочь другу, принять совместный челлендж.</li>
+          </ol>
+        </section>
+        <section class="handoff-board" aria-label="Состояния для передачи в разработку">
+          <h2>Состояния для handoff</h2>
+          <div class="handoff-grid">
+            <article>
+              <p class="eyebrow">Success</p>
+              <h3>Отклик опубликован</h3>
+              <p>Показываем +20 нейро, сохраненную серию и следующий шаг “Поддержать участника”.</p>
+            </article>
+            <article>
+              <p class="eyebrow">Error</p>
+              <h3>Отклик нужно усилить</h3>
+              <p>Короткий или повторный текст не засчитывается, но получает понятную подсказку для исправления.</p>
+            </article>
+            <article>
+              <p class="eyebrow">Empty</p>
+              <h3>Лента/друзья пустые</h3>
+              <p>Стартуем с поста инструктора, участника недели и мягкой поддержки, а не с реферальной стены.</p>
+            </article>
+            <article>
+              <p class="eyebrow">Desktop</p>
+              <h3>Лента + правый контекст</h3>
+              <p>Цель дня сверху, центральная лента фиксированной ширины, справа серия, челлендж и друг для поддержки.</p>
+            </article>
+          </div>
+        </section>
+        <section class="launch-assets" aria-label="Материалы запуска вне пользовательского телефона">
+          <p class="eyebrow">Для команды запуска</p>
+          <h2>Анонс не попадает в пользовательскую навигацию</h2>
+          <div class="launch-grid">
+            <article class="launch-copy">
+              <p class="eyebrow">Email</p>
+              <h3>Тема: НейроКафе открывает сообщество практики</h3>
+              <p>Теперь ваши открытия, рисунки и комментарии живут в общей ленте. Делитесь опытом, поддерживайте других и получайте нейро за осмысленные действия.</p>
+            </article>
+            <article class="launch-copy banner">
+              <p class="eyebrow">Баннер</p>
+              <h3>Публикуйте инсайты. Собирайте достижения.</h3>
+              <p>Первый комментарий или репост засчитает день в серии и откроет стартовую награду.</p>
+            </article>
+            <article class="launch-copy">
+              <p class="eyebrow">Push</p>
+              <h3>Сегодня в ленте новый афоризм</h3>
+              <p>Прочитайте, оставьте отклик и сохраните серию. Это займет пару минут.</p>
+            </article>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="./script.js"></script>
+  </body>
+</html>

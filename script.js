@@ -8,9 +8,13 @@ const feedList = document.querySelector("#feedList");
 const toast = document.querySelector("#toast");
 const neuroCount = document.querySelector("#neuroCount");
 const dailyProgress = document.querySelector("#dailyProgress");
+const goalFeedback = document.querySelector("#goalFeedback");
+const composerFeedback = document.querySelector("#composerFeedback");
 
 let activeKind = "Афоризм";
 let missionsDone = new Set(["read"]);
+let dailyBonusClaimed = false;
+let submittedResponses = new Set();
 let toastTimer = null;
 
 tabs.forEach((tab) => {
@@ -40,15 +44,30 @@ document.querySelectorAll(".tool-chip").forEach((chip) => {
 
 document.querySelectorAll("[data-mission]").forEach((button) => {
   button.addEventListener("click", () => {
-    markMission(button.dataset.mission);
-    button.classList.add("is-done");
+    const mission = button.dataset.mission;
+    if (mission === "read") {
+      showToast("Материал дня уже прочитан");
+      return;
+    }
+
+    if (mission === "comment") {
+      composer.scrollIntoView({ behavior: "smooth", block: "center" });
+      composerText.focus();
+      showToast("Опубликуйте содержательный отклик, чтобы действие засчиталось");
+      return;
+    }
+
+    const repost = feedList.querySelector("[data-repost]");
+    repost?.scrollIntoView({ behavior: "smooth", block: "center" });
+    showToast("Сделайте репост публикации - отметка появится после действия");
   });
 });
 
 publishPost.addEventListener("click", () => {
   const text = composerText.value.trim();
-  if (!text) {
-    showToast("Добавьте мысль или короткий отклик");
+  const validation = validateResponse(text);
+  if (validation) {
+    showComposerFeedback(validation, "error");
     composerText.focus();
     return;
   }
@@ -75,16 +94,19 @@ publishPost.addEventListener("click", () => {
       <button type="button" data-repost>В свою ленту</button>
     </div>
     <div class="comment-box" hidden>
-      <input type="text" value="Добавлю комментарий, чтобы закрепить вывод." aria-label="Комментарий" />
+      <input type="text" value="Добавлю комментарий, чтобы закрепить вывод: что изменилось в состоянии и какой шаг хочу попробовать дальше." aria-label="Комментарий" />
       <button class="primary-action" type="button" data-send-comment>Отправить</button>
     </div>
   `;
   card.querySelector(".post-text").textContent = text;
   feedList.prepend(card);
   wirePostActions(card);
-  markMission("comment");
-  addNeuro(20);
-  showToast("Пост опубликован, день серии почти закрыт");
+  submittedResponses.add(normalizeResponse(text));
+  const result = markMission("comment");
+  const bonusText = result.closedDay ? " День серии закрыт: +50 нейро." : "";
+  addNeuro(20 + (result.closedDay ? 50 : 0));
+  showComposerFeedback(`Отклик опубликован: +20 нейро.${bonusText} Следующий шаг - поддержать участника.`, "success");
+  showToast(result.closedDay ? "Отклик опубликован. День серии закрыт: +20 и +50 нейро" : "Отклик опубликован: +20 нейро");
 });
 
 document.querySelectorAll(".post-card").forEach(wirePostActions);
@@ -125,32 +147,57 @@ function wirePostActions(card) {
 
   card.querySelectorAll("[data-send-comment]").forEach((button) => {
     button.addEventListener("click", () => {
-      markMission("comment");
-      addNeuro(20);
+      const input = button.closest(".comment-box").querySelector("input");
+      const validation = validateResponse(input.value);
+      if (validation) {
+        showToast(validation);
+        input.focus();
+        return;
+      }
+      submittedResponses.add(normalizeResponse(input.value));
+      const result = markMission("comment");
+      if (result.isNew) {
+        addNeuro(20 + (result.closedDay ? 50 : 0));
+      }
       button.closest(".comment-box").hidden = true;
-      showToast("Комментарий зачтен в серию");
+      showToast(result.closedDay ? "Комментарий зачтен: +20. День серии закрыт: +50 нейро" : result.isNew ? "Комментарий зачтен: +20 нейро" : "Комментарий опубликован, действие уже засчитано сегодня");
     });
   });
 
   card.querySelectorAll("[data-repost]").forEach((button) => {
     button.addEventListener("click", () => {
       button.classList.add("is-active");
-      markMission("share");
-      addNeuro(10);
-      showToast("Репост добавлен в вашу ленту");
+      const result = markMission("share");
+      if (result.isNew) {
+        addNeuro(10 + (result.closedDay ? 50 : 0));
+      }
+      showToast(result.closedDay ? "Репост добавлен: +10. День серии закрыт: +50 нейро" : result.isNew ? "Репост добавлен: +10 нейро" : "Репост уже засчитан сегодня");
     });
   });
 }
 
 function markMission(name) {
+  const beforeSize = missionsDone.size;
   missionsDone.add(name);
   document.querySelectorAll(`[data-mission="${name}"]`).forEach((item) => item.classList.add("is-done"));
   const percent = Math.round((missionsDone.size / 3) * 100);
   dailyProgress.style.width = `${percent}%`;
+  dailyProgress.closest(".progress-track").setAttribute("aria-label", `Прогресс дня ${percent}%`);
 
-  if (percent === 100) {
-    showToast("День серии закрыт: +50 нейро и прогресс к бейджу");
+  const closedDay = percent === 100 && !dailyBonusClaimed;
+  if (closedDay) {
+    dailyBonusClaimed = true;
+    goalFeedback.textContent = "Цель дня закрыта: +50 нейро и прогресс к бейджу. Завтра появится новый мягкий шаг.";
+    goalFeedback.classList.add("is-success");
+  } else if (missionsDone.size < 3) {
+    goalFeedback.textContent = missionsDone.has("comment") ? "Остался один шаг: поддержите участника или сделайте репост." : "Следующий шаг: оставьте отклик к материалу дня.";
   }
+
+  return {
+    isNew: missionsDone.size > beforeSize,
+    closedDay,
+    percent
+  };
 }
 
 function addNeuro(amount) {
@@ -170,4 +217,25 @@ function showToast(message) {
   toastTimer = window.setTimeout(() => {
     toast.hidden = true;
   }, 2400);
+}
+
+function validateResponse(text) {
+  if (!text) return "Добавьте мысль или короткий отклик";
+  const sentenceCount = text.split(/[.!?]+/).filter((sentence) => sentence.trim().length >= 12).length;
+  if (text.length < 120 && sentenceCount < 2) {
+    return "Добавьте личное наблюдение: ориентир - 120 символов или 2 осмысленных предложения";
+  }
+  if (submittedResponses.has(normalizeResponse(text))) return "Похоже на повтор: нейро начисляются только за уникальный отклик";
+  return "";
+}
+
+function normalizeResponse(text) {
+  return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function showComposerFeedback(message, tone) {
+  composerFeedback.textContent = message;
+  composerFeedback.classList.add("is-visible");
+  composerFeedback.classList.toggle("is-error", tone === "error");
+  composerFeedback.classList.toggle("is-success", tone === "success");
 }
