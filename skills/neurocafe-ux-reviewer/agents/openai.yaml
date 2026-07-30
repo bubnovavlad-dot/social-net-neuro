@@ -1,4 +1,0 @@
-interface:
-  display_name: "НейроКафе UX Проверяющий"
-  short_description: "Проверка UX и запуска соцсети по ТЗ"
-  default_prompt: "Use $neurocafe-ux-reviewer to audit the NeuroCafe social network materials against the project brief and produce prioritized fixes."
