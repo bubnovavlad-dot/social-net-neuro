@@ -33,7 +33,8 @@
 ## Прототип
 
 - [Открыть рабочий Figma-файл](https://www.figma.com/design/QE52flPMbhME7do2FquyRY/НейроМир?node-id=0-1)
-- [Посмотреть файлы HTML-прототипа](deliverables/2026-07-29-stage2-olga-denis/prototype)
+- [Открыть интерактивный HTML-прототип](https://htmlpreview.github.io/?https://github.com/bubnovavlad-dot/social-net-neuro/blob/main/deliverables/2026-07-29-stage2-olga-denis/prototype/index.html)
+- [Посмотреть исходные файлы прототипа](deliverables/2026-07-29-stage2-olga-denis/prototype)
 
 В Figma основная обновлённая лента находится во фрейме `906:1138`; резервная копия исходных экранов вынесена на страницу **Backup / NeuroCafe / 2026-08-28**. Интерактивный HTML-прототип содержит полностью проверяемый сценарий собственной публикации.
 
