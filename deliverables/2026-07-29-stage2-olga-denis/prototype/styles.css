@@ -639,6 +639,91 @@ p {
   background: var(--green-soft);
 }
 
+.attachment-action {
+  min-height: 44px;
+  display: inline-flex !important;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--blue) !important;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px !important;
+  line-height: 16px !important;
+  font-weight: 800 !important;
+}
+
+.visually-hidden {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.attachment-preview {
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 44px;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  border: 1px solid #b1d6b8;
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--green-soft);
+}
+
+.attachment-preview[hidden] {
+  display: none;
+}
+
+.attachment-preview img {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #fff;
+}
+
+.attachment-preview div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.attachment-preview strong,
+.attachment-preview span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-preview strong {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.attachment-preview span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.attachment-preview button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 24px;
+}
+
 .feed-list {
   display: grid;
   gap: 12px;
@@ -685,6 +770,16 @@ p {
   border: 1px solid #d7d0ca;
   border-radius: 8px;
   background: linear-gradient(135deg, #fbf8f0, #eef5f2);
+}
+
+.post-image {
+  width: 100%;
+  max-height: 280px;
+  display: block;
+  margin: 12px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .artifact-line {

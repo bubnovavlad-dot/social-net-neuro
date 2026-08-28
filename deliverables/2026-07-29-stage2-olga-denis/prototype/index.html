@@ -94,13 +94,23 @@
                 <button type="button" class="tool-chip is-active" data-kind="Афоризм">Афоризм</button>
                 <button type="button" class="tool-chip" data-kind="Статья">Статья</button>
                 <button type="button" class="tool-chip" data-kind="Рисунок">Рисунок</button>
+                <label class="attachment-action" for="composerAttachment">Добавить фото</label>
+                <input id="composerAttachment" class="visually-hidden" type="file" accept="image/png,image/jpeg,image/heic,image/heif" />
                 <button type="button" class="primary-action" id="publishPost">Опубликовать</button>
+              </div>
+              <div class="attachment-preview" id="attachmentPreview" hidden>
+                <img id="attachmentImage" alt="Предпросмотр выбранного изображения" />
+                <div>
+                  <strong id="attachmentName">Изображение добавлено</strong>
+                  <span>Готово к публикации</span>
+                </div>
+                <button type="button" id="removeAttachment" aria-label="Удалить изображение">×</button>
               </div>
               <p class="form-feedback" id="composerFeedback" role="status" aria-live="polite"></p>
             </section>
 
             <section class="feed-list" id="feedList" aria-label="Публикации">
-              <article class="post-card">
+              <article class="post-card" aria-label="Публикация Ольги">
                 <header class="post-head">
                   <div class="avatar">О</div>
                   <div>
@@ -131,7 +141,7 @@
                 </div>
               </article>
 
-              <article class="post-card accent-post">
+              <article class="post-card accent-post" aria-label="Публикация Марины">
                 <header class="post-head">
                   <div class="avatar avatar-green">М</div>
                   <div>
@@ -165,7 +175,7 @@
                 <strong>+120 нейро и бейдж</strong>
               </div>
               <div class="progress-track"><span style="width: 40%"></span></div>
-              <button class="primary-action" type="button" data-toast="Челлендж добавлен в план недели">Добавить в план</button>
+              <button class="primary-action" type="button" data-toast="Челлендж добавлен в план недели" data-event="challenge_joined">Добавить в план</button>
             </article>
 
             <div class="quest-grid">
@@ -210,8 +220,8 @@
                 <strong>5/9</strong>
               </div>
               <div class="support-actions">
-                <button type="button" data-toast="Поддержка Ольге отправлена">Поддержать</button>
-                <button type="button" data-toast="Челлендж отправлен другу">Позвать в челлендж</button>
+                <button type="button" data-toast="Поддержка Ольге отправлена" data-event="friend_support_sent">Поддержать</button>
+                <button type="button" data-toast="Челлендж отправлен другу" data-event="friend_invited">Позвать в челлендж</button>
                 <button type="button" data-toast="Материал дня отправлен">Поделиться материалом</button>
               </div>
             </article>
@@ -249,7 +259,7 @@
               <p class="eyebrow">Приглашение</p>
               <h2>Позвать друга в команду практики</h2>
               <p>Приглашение остается вторичным действием после поддержки: оно расширяет команду, но не заменяет живое участие.</p>
-              <button class="primary-action ghost-action" type="button" data-toast="Приглашение подготовлено">Позвать в челлендж</button>
+              <button class="primary-action ghost-action" type="button" data-toast="Приглашение подготовлено" data-event="friend_invited">Позвать в челлендж</button>
             </article>
           </section>
         </div>

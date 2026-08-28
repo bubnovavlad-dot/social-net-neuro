@@ -10,16 +10,28 @@ const neuroCount = document.querySelector("#neuroCount");
 const dailyProgress = document.querySelector("#dailyProgress");
 const goalFeedback = document.querySelector("#goalFeedback");
 const composerFeedback = document.querySelector("#composerFeedback");
+const composerAttachment = document.querySelector("#composerAttachment");
+const attachmentPreview = document.querySelector("#attachmentPreview");
+const attachmentImage = document.querySelector("#attachmentImage");
+const attachmentName = document.querySelector("#attachmentName");
+const removeAttachment = document.querySelector("#removeAttachment");
 
 let activeKind = "Афоризм";
 let missionsDone = new Set(["read"]);
 let dailyBonusClaimed = false;
 let submittedResponses = new Set();
 let toastTimer = null;
+let attachmentDataUrl = "";
+
+window.neuroCafeAnalytics = window.neuroCafeAnalytics || [];
+trackEvent("community_opened");
+trackEvent("daily_goal_viewed");
 
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     const target = tab.dataset.screen;
+    if (target === "quests") trackEvent("personal_challenge_viewed");
+    if (target === "friends") trackEvent("friend_support_viewed");
 
     tabs.forEach((item) => item.classList.toggle("is-active", item === tab));
     screens.forEach((screen) => screen.classList.toggle("is-active", screen.id === target));
@@ -29,10 +41,32 @@ tabs.forEach((tab) => {
 
 document.querySelectorAll("[data-focus-composer]").forEach((button) => {
   button.addEventListener("click", () => {
+    trackEvent("first_response_started");
     openScreen("feed");
     composer.scrollIntoView({ behavior: "smooth", block: "center" });
     composerText.focus();
   });
+});
+
+composerText.addEventListener("focus", () => trackEvent("first_response_started"), { once: true });
+
+composerAttachment.addEventListener("change", () => {
+  const [file] = composerAttachment.files;
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    attachmentDataUrl = String(reader.result);
+    attachmentImage.src = attachmentDataUrl;
+    attachmentName.textContent = file.name;
+    attachmentPreview.hidden = false;
+  });
+  reader.readAsDataURL(file);
+});
+
+removeAttachment.addEventListener("click", () => {
+  clearAttachment();
+  composerAttachment.focus();
 });
 
 document.querySelectorAll(".tool-chip").forEach((chip) => {
@@ -49,6 +83,8 @@ document.querySelectorAll("[data-mission]").forEach((button) => {
       showToast("Материал дня уже прочитан");
       return;
     }
+
+    trackEvent("daily_goal_started", { mission });
 
     if (mission === "comment") {
       composer.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -74,6 +110,7 @@ publishPost.addEventListener("click", () => {
 
   const card = document.createElement("article");
   card.className = "post-card accent-post";
+  card.setAttribute("aria-label", "Ваша публикация");
   card.innerHTML = `
     <header class="post-head">
       <div class="avatar avatar-user">А</div>
@@ -84,6 +121,7 @@ publishPost.addEventListener("click", () => {
       <img src="./assets/icons/seeker.png" alt="Бейдж Искатель" />
     </header>
     <p class="post-text"></p>
+    ${attachmentDataUrl ? '<img class="post-image" alt="Изображение к публикации" />' : ""}
     <div class="post-metrics">
       <span>Публикация зачтена</span>
       <span>Комментарий или репост сохранит серию</span>
@@ -99,12 +137,16 @@ publishPost.addEventListener("click", () => {
     </div>
   `;
   card.querySelector(".post-text").textContent = text;
+  if (attachmentDataUrl) card.querySelector(".post-image").src = attachmentDataUrl;
   feedList.prepend(card);
   wirePostActions(card);
   submittedResponses.add(normalizeResponse(text));
   const result = markMission("comment");
   const bonusText = result.closedDay ? " День серии закрыт: +50 нейро." : "";
   addNeuro(20 + (result.closedDay ? 50 : 0));
+  trackEvent("post_created", { kind: activeKind, hasAttachment: Boolean(attachmentDataUrl) });
+  trackEvent("first_response_sent");
+  trackEvent("reward_feedback_seen", { reward: 20 + (result.closedDay ? 50 : 0) });
   showComposerFeedback(`Отклик опубликован: +20 нейро.${bonusText} Следующий шаг - поддержать участника.`, "success");
   showToast(result.closedDay ? "Отклик опубликован. День серии закрыт: +20 и +50 нейро" : "Отклик опубликован: +20 нейро");
 });
@@ -114,6 +156,7 @@ document.querySelectorAll(".post-card").forEach(wirePostActions);
 document.addEventListener("click", (event) => {
   const toastButton = event.target.closest("[data-toast]");
   if (toastButton) {
+    if (toastButton.dataset.event) trackEvent(toastButton.dataset.event);
     showToast(toastButton.dataset.toast);
   }
 });
@@ -131,6 +174,7 @@ function wirePostActions(card) {
   card.querySelectorAll("[data-like]").forEach((button) => {
     button.addEventListener("click", () => {
       button.classList.toggle("is-active");
+      if (button.classList.contains("is-active")) trackEvent("support_clicked");
       showToast(button.classList.contains("is-active") ? "Поддержка отправлена" : "Поддержка снята");
     });
   });
@@ -141,7 +185,10 @@ function wirePostActions(card) {
       if (!box) return;
 
       box.hidden = !box.hidden;
-      if (!box.hidden) box.querySelector("input").focus();
+      if (!box.hidden) {
+        trackEvent("comment_opened");
+        box.querySelector("input").focus();
+      }
     });
   });
 
@@ -155,6 +202,7 @@ function wirePostActions(card) {
         return;
       }
       submittedResponses.add(normalizeResponse(input.value));
+      trackEvent("comment_created");
       const result = markMission("comment");
       if (result.isNew) {
         addNeuro(20 + (result.closedDay ? 50 : 0));
@@ -167,6 +215,7 @@ function wirePostActions(card) {
   card.querySelectorAll("[data-repost]").forEach((button) => {
     button.addEventListener("click", () => {
       button.classList.add("is-active");
+      trackEvent("repost_created");
       const result = markMission("share");
       if (result.isNew) {
         addNeuro(10 + (result.closedDay ? 50 : 0));
@@ -185,6 +234,7 @@ function markMission(name) {
   dailyProgress.closest(".progress-track").setAttribute("aria-label", `Прогресс дня ${percent}%`);
 
   const closedDay = percent === 100 && !dailyBonusClaimed;
+  if (missionsDone.size > beforeSize) trackEvent("challenge_progress_updated", { mission: name, percent });
   if (closedDay) {
     dailyBonusClaimed = true;
     goalFeedback.textContent = "Цель дня закрыта: +50 нейро и прогресс к бейджу. Завтра появится новый мягкий шаг.";
@@ -238,4 +288,16 @@ function showComposerFeedback(message, tone) {
   composerFeedback.classList.add("is-visible");
   composerFeedback.classList.toggle("is-error", tone === "error");
   composerFeedback.classList.toggle("is-success", tone === "success");
+}
+
+function clearAttachment() {
+  attachmentDataUrl = "";
+  composerAttachment.value = "";
+  attachmentImage.removeAttribute("src");
+  attachmentPreview.hidden = true;
+}
+
+function trackEvent(name, properties = {}) {
+  window.neuroCafeAnalytics.push({ name, properties, timestamp: new Date().toISOString() });
+  window.dispatchEvent(new CustomEvent("neurocafe:analytics", { detail: { name, properties } }));
 }
